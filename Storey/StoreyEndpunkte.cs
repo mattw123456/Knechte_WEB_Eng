@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using WebEngineering.Buildings;
 
 namespace WebEngineering.Storey
@@ -11,12 +12,19 @@ namespace WebEngineering.Storey
                     "/api/v3/assets/storeys",
                     async (
                         [FromServices] IStoreyService service,
+                        [FromServices] ILogger<IStoreyService> logger,
                         [FromQuery] Guid? building_id = null,
                         [FromQuery] bool include_deleted = false
                     ) =>
                     {
-                        var storey = await service.GetAllStoreysAsync(building_id, include_deleted);
-                        return new { storeys = storey };
+                        logger.LogInformation(
+                            "Fetching all storeys (building_id={building_id}, include_deleted={include_deleted})",
+                            building_id,
+                            include_deleted
+                        );
+
+                        var storeys = await service.GetAllStoreysAsync(building_id, include_deleted);
+                        return new { storeys = storeys };
                     }
                 )
                 .WithName("GetAllStoreys")
@@ -27,30 +35,33 @@ namespace WebEngineering.Storey
                     "/api/v3/assets/storeys",
                     async (
                         [FromServices] IStoreyService service,
-                        [FromServices] IBuildingService buildingservice,
+                        [FromServices] IBuildingService buildingService,
+                        [FromServices] ILogger<IStoreyService> logger,
                         [FromBody] Storey storey
                     ) =>
                     {
-                        // Überprüfen, ob das Gebäude existiert und nicht gelöscht ist
-                        var building = await buildingservice.GetBuildingByIdAsync(
-                            storey.building_id
-                        );
+                        logger.LogInformation("Creating a new storey with data: {@storey}", storey);
+
+                        var building = await buildingService.GetBuildingByIdAsync(storey.building_id);
 
                         if (building == null || building.deleted_at != null)
                         {
-                            // Fehler, wenn das Gebäude nicht existiert oder gelöscht ist
+                            logger.LogWarning(
+                                "Failed to create storey: building_id={building_id} not found or deleted",
+                                storey.building_id
+                            );
                             return Results.BadRequest(
                                 new { Message = "Building not found or deleted." }
                             );
                         }
 
-                        // Storey mit der Gebäude-ID verknüpfen
-                        storey.building_id = storey.building_id;
-
-                        // Storey erstellen
                         var createdStorey = await service.CreateStoreyAsync(storey);
 
-                        // Erfolg zurückgeben
+                        logger.LogInformation(
+                            "Storey successfully created with ID={createdStoreyId}",
+                            createdStorey.id
+                        );
+
                         return Results.Created(
                             $"/api/v3/assets/storeys/{createdStorey.id}",
                             createdStorey
@@ -64,17 +75,24 @@ namespace WebEngineering.Storey
 
             app.MapGet(
                     "/api/v3/assets/storeys/{id}",
-                    async ([FromServices] IStoreyService service, Guid id) =>
+                    async (
+                        [FromServices] IStoreyService service,
+                        [FromServices] ILogger<IStoreyService> logger,
+                        Guid id
+                    ) =>
                     {
+                        logger.LogInformation("Fetching storey details for ID={id}", id);
+
                         var storey = await service.GetStoreyByIdAsync(id);
-                        if (storey != null)
+
+                        if (storey == null)
                         {
-                            return Results.Ok(storey);
+                            logger.LogWarning("Storey with ID={id} not found", id);
+                            return Results.NotFound(new { Message = "Storey not found." });
                         }
-                        else
-                        {
-                            return Results.NotFound(new { Message = "Storey not found."});
-                        }
+
+                        logger.LogInformation("Storey details fetched for ID={id}", id);
+                        return Results.Ok(storey);
                     }
                 )
                 .WithName("GetStoreyById")
@@ -84,35 +102,44 @@ namespace WebEngineering.Storey
             app.MapPut(
                     "/api/v3/assets/storeys/{id}",
                     async (
-                        [FromServices] IStoreyService storeyservice,
+                        [FromServices] IStoreyService storeyService,
                         [FromServices] IBuildingService buildingService,
+                        [FromServices] ILogger<IStoreyService> logger,
                         Guid id,
                         Storey storey
                     ) =>
                     {
+                        logger.LogInformation("Updating storey with ID={id} and data: {@storey}", id, storey);
+
                         if (storey == null)
                             return Results.BadRequest("Storey data is required.");
 
-                        // Überprüfung, ob das Gebäude existiert
-                        var building = await buildingService.GetBuildingByIdAsync(
-                            storey.building_id
-                        );
+                        var building = await buildingService.GetBuildingByIdAsync(storey.building_id);
 
-                        if (building == null)
-                            return Results.NotFound("Building not found.");
-
-                        if (building.deleted_at != null) // Angenommen, das Gebäude hat ein 'DeletedAt' Feld
-                            return Results.BadRequest("Building is deleted and cannot be modified.");
+                        if (building == null || building.deleted_at != null)
+                        {
+                            logger.LogWarning(
+                                "Failed to update storey: building_id={building_id} not found or deleted",
+                                storey.building_id
+                            );
+                            return Results.BadRequest("Building not found or deleted.");
+                        }
 
                         if (storey.deleted_at != null)
+                        {
+                            logger.LogWarning("Failed to update storey: Storey ID={id} is deleted", id);
                             return Results.BadRequest("Storey is deleted and cannot be modified");
+                        }
 
-                        // Aktualisierung des Storeys
-                        var updatedStorey = await storeyservice.UpdateStoreyAsync(storey, id);
+                        var updatedStorey = await storeyService.UpdateStoreyAsync(storey, id);
 
                         if (updatedStorey == null)
+                        {
+                            logger.LogWarning("Storey with ID={id} not found for update", id);
                             return Results.NotFound("Storey not found or could not be updated.");
+                        }
 
+                        logger.LogInformation("Storey with ID={id} successfully updated", id);
                         return Results.Ok(updatedStorey);
                     }
                 )
@@ -125,15 +152,22 @@ namespace WebEngineering.Storey
                     "/api/v3/assets/storeys/{id}",
                     async (
                         [FromServices] IStoreyService service,
+                        [FromServices] ILogger<IStoreyService> logger,
                         Guid id,
                         [FromQuery] bool permanent = false
                     ) =>
                     {
-                        var deletedSucessfully = await service.DeleteStoreyAsync(id, permanent);
+                        logger.LogInformation("Deleting storey with ID={id} (permanent={permanent})", id, permanent);
 
-                        if (deletedSucessfully)
+                        var deletedSuccessfully = await service.DeleteStoreyAsync(id, permanent);
+
+                        if (deletedSuccessfully)
+                        {
+                            logger.LogInformation("Storey with ID={id} successfully deleted", id);
                             return Results.NoContent();
+                        }
 
+                        logger.LogWarning("Failed to delete storey with ID={id}", id);
                         return Results.BadRequest();
                     }
                 )
