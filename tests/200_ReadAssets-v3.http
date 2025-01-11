@@ -1,0 +1,203 @@
+### get the status with authors
+
+GET {{host}}/{{assets-api-v3}}/status
+
+> {%
+    import { get_status_200 as validate } from '../public/v3/validate-assets-v3.js'
+
+    client.test("Response status 200", function() {
+        client.assert(response.status === 200, "Response status is not 200 but " + response.status);
+    })
+
+    client.test("Response body is valid", function() {
+        client.assert(validate(response.body), "Response body is invalid: " + JSON.stringify(validate.errors))
+    })
+
+    client.log(JSON.stringify(response.body.authors))
+%}
+
+### get all buildings
+
+GET {{host}}/{{assets-api-v3}}/buildings
+
+> {%
+    import { get_buildings_200 as validate } from '../public/v3/validate-assets-v3.js'
+
+    client.test("Response status 200", function() {
+        client.assert(response.status === 200, "Response status is not 200 but " + response.status);
+    })
+
+    client.test("Response body is valid", function() {
+        client.assert(validate(response.body), "Response body is invalid: " + JSON.stringify(validate.errors))
+    })
+
+    // allow invalid answer as array instead of object to move on
+    const buildings = Array.isArray(response.body.buildings) ? response.body.buildings : response.body
+    client.global.set("building-id", buildings[0].id)
+    client.global.set("amount-buildings-active", buildings.length)
+%}
+
+### get a single building
+
+GET {{host}}/{{assets-api-v3}}/buildings/{{building-id}}
+
+> {%
+    import { get_building_200 as validate } from '../public/v3/validate-assets-v3.js'
+
+    client.test("Response status 200", function() {
+        client.assert(response.status === 200, "Response status is not 200 but " + response.status);
+    })
+
+    client.test("Response body is valid", function() {
+        client.assert(validate(response.body), "Response body is invalid: " + JSON.stringify(validate.errors))
+    })
+%}
+
+### get a non-existing building
+
+GET {{host}}/{{assets-api-v3}}/buildings/00000000-0000-0000-0000-000000000000
+
+> {%
+    import { get_building_404 as validate } from '../public/v3/validate-assets-v3.js'
+
+    client.test("Response status 404", function() {
+        client.assert(response.status === 404, "Response status is not 404 but " + response.status);
+    })
+
+    /*
+     * skip for now
+    client.test("Response body is valid", function() {
+        client.assert(validate(response.body), "Response body is invalid: " + JSON.stringify(validate.errors))
+    })
+     */
+%}
+
+### get a building with invalid id
+
+GET {{host}}/{{assets-api-v3}}/buildings/this-is-invalid
+
+> {%
+    client.test("Response status 4xx", function() {
+        client.assert(response.status >= 400 && response.status < 500, "Response status is not 4xx but " + response.status);
+    })
+%}
+
+### get all buildings with deleted
+
+GET {{host}}/{{assets-api-v3}}/buildings?include_deleted=true
+
+> {%
+    client.test("Response status 200", function() {
+        client.assert(response.status === 200, "Response status is not 200 but " + response.status);
+    })
+
+    const amountBuildingsActive = client.global.get("amount-buildings-active")
+    client.test("Amount of buildings with deleted is higher than active only", function () {
+        // allow invalid answer as array instead of object to move on
+        const buildings = Array.isArray(response.body.buildings) ? response.body.buildings : response.body
+        const amountBuildingsWithDeleted = buildings.length
+        client.assert(amountBuildingsWithDeleted > amountBuildingsActive, "list of buildings including deleted is " + amountBuildingsWithDeleted + ", but active only is " + amountBuildingsActive)
+    })
+%}
+
+### get all storeys
+
+GET {{host}}/{{assets-api-v3}}/storeys
+
+> {%
+    import { get_storeys_200 as validate } from '../public/v3/validate-assets-v3.js'
+
+    client.test("Response status 200", function() {
+        client.assert(response.status === 200, "Response status is not 200 but " + response.status);
+    })
+
+    client.test("Response body is valid", function() {
+        client.assert(validate(response.body), "Response body is invalid: " + JSON.stringify(validate.errors))
+    })
+
+    // allow invalid answer as array instead of object to move on
+    const storeys = Array.isArray(response.body.storeys) ? response.body.storeys : response.body
+    client.global.set("amount-storeys-unfiltered", storeys.length)
+%}
+
+### get storeys with building-filter
+
+GET {{host}}/{{assets-api-v3}}/storeys?building_id={{building-id}}
+
+> {%
+    client.test("Response status 200", function() {
+        client.assert(response.status === 200, "Response status is not 200 but " + response.status);
+    })
+
+    const amountStoreysUnfiltered = client.global.get("amount-storeys-unfiltered")
+    // allow invalid answer as array instead of object to move on
+    const storeys = Array.isArray(response.body.storeys) ? response.body.storeys : response.body
+    client.test("Amount of unfiltered storeys is higher than filtered storeys", function () {
+        const amountStoreysFiltered = storeys.length
+        client.assert(amountStoreysUnfiltered > amountStoreysFiltered, "list of filtered storeys is " + amountStoreysFiltered + ", but unfiltered is " + amountStoreysUnfiltered)
+    })
+
+    client.global.set("storey-id", storeys[0].id)
+%}
+
+### get a single storey
+
+GET {{host}}/{{assets-api-v3}}/storeys/{{storey-id}}
+
+> {%
+    import { get_storey_200 as validate } from '../public/v3/validate-assets-v3.js'
+
+    client.test("Response status 200", function() {
+        client.assert(response.status === 200, "Response status is not 200 but " + response.status);
+    })
+
+    client.test("Response body is valid", function() {
+        client.assert(validate(response.body), "Response body is invalid: " + JSON.stringify(validate.errors))
+    })
+%}
+
+### get all rooms
+
+GET {{host}}/{{assets-api-v3}}/rooms
+
+> {%
+    import { get_rooms_200 as validate } from '../public/v3/validate-assets-v3.js'
+
+    client.test("Response status 200", function() {
+        client.assert(response.status === 200, "Response status is not 200 but " + response.status);
+    })
+
+    client.test("Response body is valid", function() {
+        client.assert(validate(response.body), "Response body is invalid: " + JSON.stringify(validate.errors))
+    })
+%}
+
+### get rooms with storey-filter
+
+GET {{host}}/{{assets-api-v3}}/rooms?storey_id={{storey-id}}
+
+> {%
+    client.test("Response status 200", function() {
+        client.assert(response.status === 200, "Response status is not 200 but " + response.status);
+    })
+
+    // allow invalid answer as array instead of object to move on
+    const rooms = Array.isArray(response.body.rooms) ? response.body.rooms : response.body
+    client.global.set("room-id", rooms[0].id)
+%}
+
+### get a single room
+
+GET {{host}}/{{assets-api-v3}}/rooms/{{room-id}}
+
+> {%
+    import { get_room_200 as validate } from '../public/v3/validate-assets-v3.js'
+
+    client.test("Response status 200", function() {
+        client.assert(response.status === 200, "Response status is not 200 but " + response.status);
+    })
+
+    client.test("Response body is valid", function() {
+        client.assert(validate(response.body), "Response body is invalid: " + JSON.stringify(validate.errors))
+    })
+%}

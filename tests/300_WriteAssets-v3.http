@@ -1,0 +1,452 @@
+### run Authenticate first to get the required tokens
+run 000_Authenticate.http
+
+### try to create a new building unauthenticated
+
+POST {{host}}/{{assets-api-v3}}/buildings
+Content-Type: application/json
+
+{
+  "name": "okcidento",
+  "streetname": "provluda strateto",
+  "housenumber": "14",
+  "country_code": "eo",
+  "postalcode": "12345",
+  "city": "trial urbo"
+}
+
+> {%
+    import { create_building_401 as validate } from '../public/v3/validate-assets-v3.js'
+
+    client.test("Response status 401", function() {
+        client.assert(response.status === 401, "Response status is not 401 but " + response.status);
+    })
+
+    client.test("Response body is valid", function() {
+        client.assert(validate(response.body), "Response body is invalid: " + JSON.stringify(validate.errors))
+    })
+%}
+
+### try to create a new building with an invalid key
+
+# get a key from here: https://8gwifi.org/jwsgen.jsp
+# open biletado frontend
+# show access token on jwt.io
+# ajust expiry and sign
+
+# -----BEGIN PUBLIC KEY-----
+# MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA0P1pbai7B5iGmlUOUZpG
+# o5Fa1LZevAA/0xAsF+KNnvmBWGoveRjLXU7aIeLhRZAdmQSjqzpqMAhw8MXDXVSu
+# MTPWhz6huCCQP2rJWnoI3YcfOMaUkOaqHirw64B7g65XcWZ6hQe3xdCgNoZZZ2/7
+# fOA2hrf4EivtmJPA0BnlB3nwiBWdBBZA0io57Lo7nmSnPvlpwUF5CFQYaJ+MXB0N
+# E24ooXTPRM8AvIno/eWfu6IQxPNjkv7wEkVa7N/MaN879dJlQBp7Ns9KQj+VtkAY
+# l6DPVcRhyugafULAluQ6hH4VyzJBDwVOtQpIJLpitvZw4qjPHGY03sdHgSpBl/tW
+# SwIDAQAB
+# -----END PUBLIC KEY-----
+
+# -----BEGIN RSA PRIVATE KEY-----
+# MIIEowIBAAKCAQEA0P1pbai7B5iGmlUOUZpGo5Fa1LZevAA/0xAsF+KNnvmBWGov
+# eRjLXU7aIeLhRZAdmQSjqzpqMAhw8MXDXVSuMTPWhz6huCCQP2rJWnoI3YcfOMaU
+# kOaqHirw64B7g65XcWZ6hQe3xdCgNoZZZ2/7fOA2hrf4EivtmJPA0BnlB3nwiBWd
+# BBZA0io57Lo7nmSnPvlpwUF5CFQYaJ+MXB0NE24ooXTPRM8AvIno/eWfu6IQxPNj
+# kv7wEkVa7N/MaN879dJlQBp7Ns9KQj+VtkAYl6DPVcRhyugafULAluQ6hH4VyzJB
+# DwVOtQpIJLpitvZw4qjPHGY03sdHgSpBl/tWSwIDAQABAoIBABp/fv4Z7jjc1Hg9
+# /5ZGJt23YNpmkyVoLK+Ate6DWayF+ynwMLu8cpCOnma8gw6UYsRTi8L6oZscfuFw
+# WcB8K6fuaC12uf+EFXYM/qG7pmMcLk+/Efg7Xud7T1e0zzRXhxvIQBGc9Gae+Klh
+# KHXOg4cGULONIOWA71uwpDpehiUHzNlXKTWEf8VzSjkiOOIWVXgqYeFLG4Sdpjun
+# 7gqQr+iLtOvz26KY8gUKUtoekdvAMWruq/VtgDDE5fs2fX3onG7EalT63K1cPUE4
+# lonrON+au0yu1DlS7rQT6TCFZ4qeB44Z9IzA188jjshu/ZPx6ktWdhaWmtinB72V
+# bZn+mOECgYEA5266lWl9NWfjfSpqBF7uLv3V9uSzJPNTCMXKCk8Fhvt21K/47jyu
+# ukLP+gDHIHoNc5DMM6l5QEj7bgXHTKE0dpDX7HM2s/X0EHpq327S91Bjd3yj2e8V
+# dYpBW9GqBCI7/DX85HHFH2HZGSNNNif/qHD3Wo7SxkPpZSb0veAUNCECgYEA5yzL
+# kfkYZXv1UlHB8YUFU0EBIIV+HSD/resyfwg3mIpeVfjC63ohBse4zAX2pcGl9C/C
+# mh6+leogooNa9hoDlJE9KxsDXgGIaPLzoqduhdNtvuN1kF9WfJ8A7FvoLxTll+Bt
+# FsgAEj4fnCiyyN2KUM709Uh/iDLU4Ejjwm4//OsCgYEAi9R2PYIwGY18gIqY5a0p
+# whCyL2s85g1yVPGUQig+kbDrulPcVq0pcPafTFEd/vxfljyddHVoAjRWXcJ2CVG5
+# Lg4TuBRgr9jiLvaYDgmaw7y5bF9NbIas84imNsD2NWstzRQdiTVIQc7P6gVPSHJg
+# YLhoazmyFgLASNKBuxtheaECgYBbrGrp7zMag4asZ1mWsl6DPmL5B5cUbBKYYI28
+# zIBnkG+KfkSl5t+T9b21wqOl5d4usIXmYkzH3HmmmJqIv5Yt406zelnifI8gtz+g
+# f+8XSNnbeg4T+4qrjs5p7KRtj0bg7JG2GAfXNCWK4qTLfPctxnRjlKVmWGoMqzsO
+# znO3kwKBgBetmRhpm4KC6tdsaN1lEhotrgKDPnsaAxNeDAwiMpRfJHHQE9igQ4Qr
+# jAsadRP8YHaWYHi3sm9bXGK2qWR0ZiOBqRsrpfRDm78gjezDl1uPUh5zeB7Q2Sxj
+# /zOG5pzL1kX3GNxHu82ARJX5o+RUODnUFSp9KAQUFOpZC2+ssqmE
+# -----END RSA PRIVATE KEY-----
+POST {{host}}/{{assets-api-v3}}/buildings
+Content-Type: application/json
+Authorization: Baerer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IldiQzhEMkZNeVBDZ3I5WXVlcmZCM1pidllMNkhrRVMxVlZ2c0lOa2tEbjAifQ.eyJleHAiOjI3MTAzOTcxOTgsImlhdCI6MTcxMDM5NzEzOCwiYXV0aF90aW1lIjoxNzEwMzk3MTM4LCJqdGkiOiIyMzE3Yjc1ZC1lNmQ0LTQ3YTItOTdlNS02MTkyYjBjNzgxNjQiLCJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjkwOTAvYXV0aC9yZWFsbXMvYmlsZXRhZG8iLCJhdWQiOiJhY2NvdW50Iiwic3ViIjoiMjhjNDQ0MjYtMjFhOS00ODJkLWFmNzItOTQyM2QxNzk5OTAyIiwidHlwIjoiQmVhcmVyIiwiYXpwIjoiYW5ndWxhciIsIm5vbmNlIjoiYzI4OTNkMGEtYjE0OS00NWYwLThlYzYtZDA4YThkZGNhN2QyIiwic2Vzc2lvbl9zdGF0ZSI6IjJiMzZhM2M3LTEzMTgtNGYyNC04Y2Q2LWUyZmRjMjhmYzZiNSIsImFsbG93ZWQtb3JpZ2lucyI6WyJodHRwOi8vYmlsZXRhZG8uYXBwcy1jcmMudGVzdGluZyIsImh0dHA6Ly9sb2NhbGhvc3Q6OTA5MCIsImh0dHA6Ly9sb2NhbGhvc3Q6NDIwMCJdLCJyZWFsbV9hY2Nlc3MiOnsicm9sZXMiOlsiZGVmYXVsdC1yb2xlcy1tYXN0ZXIiLCJvZmZsaW5lX2FjY2VzcyIsInVtYV9hdXRob3JpemF0aW9uIl19LCJyZXNvdXJjZV9hY2Nlc3MiOnsiYWNjb3VudCI6eyJyb2xlcyI6WyJtYW5hZ2UtYWNjb3VudCIsIm1hbmFnZS1hY2NvdW50LWxpbmtzIiwidmlldy1wcm9maWxlIl19fSwic2NvcGUiOiJvcGVuaWQgZW1haWwgcHJvZmlsZSIsInNpZCI6IjJiMzZhM2M3LTEzMTgtNGYyNC04Y2Q2LWUyZmRjMjhmYzZiNSIsImVtYWlsX3ZlcmlmaWVkIjpmYWxzZSwicHJlZmVycmVkX3VzZXJuYW1lIjoiYmlsZXRhZG8ifQ.zlhrjGoy0tGmxcdgHBhjhxXuyj2Hok7IuL6M4PSP3RwXF5lCex06Lu60MWGSV7PkKjLfZB3wFpa9kgZT721DN6MfoJOsla2x2EGpTgxNIb7Gog0S820vAkgpJn3Sipk-K2pikzEDh7yWVt-UEuvoSb3IU_TlJG_7_RsawMYSBzTm34OyW11SEy7Mk-RgsW10wCQr60w0OjfpO15DDsiFLtOBuUEAsG0iJWbXx7iq8ZSt2TrQNF_cG1MCMGQhvVsu9DCsPKCUjq71OVq480J6xAMIAOS33ZlQFVaZElTJwYCqCpL7tajYAWnDmLPD-EQafeImwPuGbIHsAjmExUCr5Q
+
+{
+  "name": "okcidento",
+  "streetname": "provluda strateto",
+  "housenumber": "14",
+  "country_code": "eo",
+  "postalcode": "12345",
+  "city": "trial urbo"
+}
+
+> {%
+    client.test("Response status 4xx", function() {
+        client.assert(response.status >= 400 && response.status < 500, "Response status is not 4xx but " + response.status);
+    })
+%}
+
+
+### create a new building
+
+POST {{host}}/{{assets-api-v3}}/buildings
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
+{
+  "name": "okcidento",
+  "streetname": "provluda strateto",
+  "housenumber": "14",
+  "country_code": "eo",
+  "postalcode": "12345",
+  "city": "trial urbo"
+}
+
+> {%
+    import { create_building_201 as validate } from '../public/v3/validate-assets-v3.js'
+
+    client.test("Response status 201", function() {
+        client.assert(response.status === 201, "Response status is not 201 but " + response.status);
+    })
+
+    client.test("Response body is valid", function() {
+        client.assert(validate(response.body), "Response body is invalid: " + JSON.stringify(validate.errors))
+    })
+
+    client.test("Response headers contain Location", function() {
+        let expectedLocation = request.environment.get("assets-api-v3") + "/buildings/" + response.body.id
+        client.assert(response.headers.valueOf("Location") == expectedLocation, "Location Header has wrong content: " + response.headers.valueOf("Location"))
+    })
+
+    client.global.set("building-id", response.body.id)
+%}
+
+### get new building
+
+GET {{host}}/{{assets-api-v3}}/buildings/{{building-id}}
+
+> {%
+    import { get_building_200 as validate } from '../public/v3/validate-assets-v3.js'
+
+    client.test("Response status 200", function() {
+        client.assert(response.status === 200, "Response status is not 200 but " + response.status);
+    })
+
+    client.test("Response body is valid", function() {
+        client.assert(validate(response.body), "Response body is invalid: " + JSON.stringify(validate.errors))
+    })
+%}
+
+### update new building
+
+PUT {{host}}/{{assets-api-v3}}/buildings/{{building-id}}
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
+{
+  "name": "okcidento",
+  "streetname": "provluda strateto",
+  "housenumber": "15",
+  "country_code": "eo",
+  "postalcode": "12345",
+  "city": "trial urbo"
+}
+
+> {%
+    import { replace_building_200 as validate } from '../public/v3/validate-assets-v3.js'
+
+    client.test("Response status 200", function() {
+        client.assert(response.status === 200, "Response status is not 200 but " + response.status);
+    })
+
+    client.test("Response body is valid", function() {
+        client.assert(validate(response.body), "Response body is invalid: " + JSON.stringify(validate.errors))
+    })
+%}
+
+### check building change
+
+GET {{host}}/{{assets-api-v3}}/buildings/{{building-id}}
+
+> {%
+    client.test("Response status 200", function() {
+        client.assert(response.status === 200, "Response status is not 200 but " + response.status);
+    })
+
+    client.test("Building contains new housenumber", function() {
+        client.assert(response.body.housenumber == "15", "housenumber in response does not match the new one. Response was \"" + JSON.stringify(response.body) + "\"")
+    })
+%}
+
+### soft delete new building
+
+DELETE {{host}}/{{assets-api-v3}}/buildings/{{building-id}}
+Authorization: Bearer {{access_token}}
+
+> {%
+    client.test("Response status 204", function() {
+        client.assert(response.status === 204, "Response status is not 204 but " + response.status);
+    })
+%}
+
+### check for deleted_at on building
+
+GET {{host}}/{{assets-api-v3}}/buildings/{{building-id}}
+
+> {%
+    client.test("Response status 200", function() {
+        client.assert(response.status === 200, "Response status is not 200 but " + response.status);
+    })
+
+    client.test("Building contains deleted at", function() {
+        client.assert(response.body.deleted_at !== undefined, "Deleted building has no deletion date")
+    })
+%}
+
+### try to create a storey for soft-deleted building
+
+POST {{host}}/{{assets-api-v3}}/storeys
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
+{
+  "name": "subtegmento",
+  "building_id": "{{building-id}}"
+}
+
+> {%
+    import { create_storey_400 as validate } from '../public/v3/validate-assets-v3.js'
+
+    client.test("Response status 400", function() {
+        client.assert(response.status === 400, "Response status is not 400 but " + response.status);
+    })
+
+    client.test("Response body is valid", function() {
+        client.assert(validate(response.body), "Response body is invalid: " + JSON.stringify(validate.errors))
+    })
+%}
+
+### try to create a storey for non existing building
+
+POST {{host}}/{{assets-api-v3}}/storeys
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
+{
+  "name": "subtegmento",
+  "building_id": "{{$random.uuid}}"
+}
+
+> {%
+    import { create_storey_400 as validate } from '../public/v3/validate-assets-v3.js'
+
+    client.test("Response status 400", function() {
+        client.assert(response.status === 400, "Response status is not 400 but " + response.status);
+    })
+
+    client.test("Response body is valid", function() {
+        client.assert(validate(response.body), "Response body is invalid: " + JSON.stringify(validate.errors))
+    })
+%}
+
+### restore the building
+
+PUT {{host}}/{{assets-api-v3}}/buildings/{{building-id}}
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
+{
+  "name": "okcidento",
+  "streetname": "provluda strateto",
+  "housenumber": "14",
+  "country_code": "eo",
+  "postalcode": "12345",
+  "city": "trial urbo",
+  "deleted_at": null
+}
+
+> {%
+    client.test("Response status 200", function() {
+        client.assert(response.status === 200, "Response status is not 200 but " + response.status);
+    })
+%}
+
+### create a storey for building
+
+POST {{host}}/{{assets-api-v3}}/storeys
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
+{
+  "name": "subtegmento",
+  "building_id": "{{building-id}}"
+}
+
+> {%
+    import { create_storey_201 as validate } from '../public/v3/validate-assets-v3.js'
+
+    client.test("Response status 201", function() {
+        client.assert(response.status === 201, "Response status is not 201 but " + response.status);
+    })
+
+    client.test("Response body is valid", function() {
+        client.assert(validate(response.body), "Response body is invalid: " + JSON.stringify(validate.errors))
+    })
+
+    client.global.set("storey-id", response.body.id)
+%}
+
+### try to delete building with active storey
+
+DELETE {{host}}/{{assets-api-v3}}/buildings/{{building-id}}
+Authorization: Bearer {{access_token}}
+
+> {%
+    import { delete_building_400 as validate } from '../public/v3/validate-assets-v3.js'
+
+    client.test("Response status 400", function() {
+        client.assert(response.status === 400, "Response status is not 400 but " + response.status);
+    })
+
+    client.test("Response body is valid", function() {
+        client.assert(validate(response.body), "Response body is invalid: " + JSON.stringify(validate.errors))
+    })
+%}
+
+### soft delete a storey
+
+DELETE {{host}}/{{assets-api-v3}}/storeys/{{storey-id}}
+Authorization: Bearer {{access_token}}
+
+> {%
+    client.test("Response status 204", function() {
+        client.assert(response.status === 204, "Response status is not 204 but " + response.status);
+    });
+
+    client.test("Response body is either empty or null", function() {
+        client.assert(
+            response.body === "" || response.body === null,
+            "Response body is neither empty string nor null but: " + response.body
+        );
+    });
+%}
+
+### try to permanent delete building with soft-deleted storey
+
+DELETE {{host}}/{{assets-api-v3}}/buildings/{{building-id}}?permanent=true
+Authorization: Bearer {{access_token}}
+
+> {%
+    import { delete_building_400 as validate } from '../public/v3/validate-assets-v3.js'
+
+    client.test("Response status 400", function() {
+        client.assert(response.status === 400, "Response status is not 400 but " + response.status);
+    })
+
+    client.test("Response body is valid", function() {
+        client.assert(validate(response.body), "Response body is invalid: " + JSON.stringify(validate.errors))
+    })
+%}
+
+### permanent delete storey
+
+DELETE {{host}}/{{assets-api-v3}}/storeys/{{storey-id}}?permanent=true
+Authorization: Bearer {{access_token}}
+
+> {%
+    client.test("Response status 204", function() {
+        client.assert(response.status === 204, "Response status is not 204 but " + response.status);
+    });
+
+    client.test("Response body is either empty or null", function() {
+        client.assert(
+            response.body === "" || response.body === null,
+            "Response body is neither empty string nor null but: " + response.body
+        );
+    });
+%}
+
+### check for deleted storey
+
+GET {{host}}/{{assets-api-v3}}/storeys/{{storey-id}}
+
+> {%
+    import { get_storey_404 as validate } from '../public/v3/validate-assets-v3.js'
+
+    client.test("Response status 404", function() {
+        client.assert(response.status === 404, "Response status is not 404 but " + response.status);
+    })
+
+    client.test("Response body is valid", function() {
+        client.assert(validate(response.body), "Response body is invalid: " + JSON.stringify(validate.errors))
+    })
+%}
+
+### permanent delete building for cleanup
+
+DELETE {{host}}/{{assets-api-v3}}/buildings/{{building-id}}?permanent=true
+Authorization: Bearer {{access_token}}
+
+> {%
+    client.test("Response status 204", function() {
+        client.assert(response.status === 204, "Response status is not 204 but " + response.status);
+    });
+
+    client.test("Response body is either empty or null", function() {
+        client.assert(
+            response.body === "" || response.body === null,
+            "Response body is neither empty string nor null but: " + response.body
+        );
+    });
+%}
+
+### create a building with PUT
+
+PUT {{host}}/{{assets-api-v3}}/buildings/{{$random.uuid}}
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
+{
+  "name": "okcidento",
+  "streetname": "provluda strateto",
+  "housenumber": "14",
+  "country_code": "eo",
+  "postalcode": "12345",
+  "city": "trial urbo"
+}
+
+> {%
+    import { replace_building_201 as validate } from '../public/v3/validate-assets-v3.js'
+
+    client.test("Response status 201", function() {
+        client.assert(response.status === 201, "Response status is not 201 but " + response.status);
+    })
+
+    client.test("Response body is valid", function() {
+        client.assert(validate(response.body), "Response body is invalid: " + JSON.stringify(validate.errors))
+    })
+
+    client.global.set("building-id", response.body.id)
+%}
+
+### permanent delete building for cleanup
+
+DELETE {{host}}/{{assets-api-v3}}/buildings/{{building-id}}?permanent=true
+Authorization: Bearer {{access_token}}
+
+> {%
+    client.test("Response status 204", function() {
+        client.assert(response.status === 204, "Response status is not 204 but " + response.status);
+    });
+
+    client.test("Response body is either empty or null", function() {
+        client.assert(
+            response.body === "" || response.body === null,
+            "Response body is neither empty string nor null but: " + response.body
+        );
+    });
+%}

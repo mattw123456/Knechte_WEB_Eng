@@ -1,0 +1,5 @@
+
+### jwt-pong
+
+GET {{host}}/{{api-jwt-v2}}
+Authorization: Bearer {{access_token}}

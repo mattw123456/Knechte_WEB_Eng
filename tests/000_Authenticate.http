@@ -1,0 +1,68 @@
+### loginForm
+
+# @no-redirect
+
+< {%
+
+request.variables.set("redirect_uri_escaped", encodeURI(request.environment.get("redirect_uri")))
+client.global.clearAll()
+
+%}
+
+GET {{keycloak_url}}/realms/{{realm}}/protocol/openid-connect/auth?client_id={{client_id}}&redirect_uri={{redirect_uri_escaped}}&response_mode=fragment&response_type=code&scope=openid
+
+> {%
+
+// if the authentication is still valid and saved in the cookies, this url will redirect immediately
+// otherwise this request answers with an HTML form
+if (response.status === 200) {
+    let keycloak_url = request.environment.get("keycloak_url")
+    let realm = request.environment.get("realm")
+    let regex = new RegExp(`${keycloak_url}/realms/${realm}/login-actions/authenticate\\?session_code=[^"]+`)
+    let authenticate_url = response.body.match(regex).toString().replace(/&amp;/g, "&")
+    client.global.set("authenticate_url", authenticate_url)
+} else if (response.status === 302) {
+    let code_url = response.headers.valueOf("Location")
+    let code = code_url.match(/code=([a-f0-9.-]+)/)[1]
+    client.global.set("code", code)
+    client.global.set("authenticate_url", request.url()) // must be set, because next request cannot be skipped
+}
+
+%}
+
+### authentication
+
+# @no-redirect
+
+POST {{authenticate_url}}
+Content-Type: application/x-www-form-urlencoded
+
+username={{username}}
+&password={{password}}
+
+> {%
+if (response.status === 302) {
+    let code_url = response.headers.valueOf("Location")
+    let code = code_url.match(/code=([a-f0-9.-]+)/)[1]
+    client.global.set("code", code)
+}
+%}
+
+### getToken
+
+< {%
+
+    request.variables.set("redirect_uri_escaped", encodeURI(request.environment.get("redirect_uri")))
+
+%}
+
+POST {{keycloak_url}}/realms/{{realm}}/protocol/openid-connect/token
+Content-Type: application/x-www-form-urlencoded
+
+client_id={{client_id}}&redirect_uri={{redirect_uri_escaped}}&grant_type=authorization_code&code={{code}}
+
+> {%
+
+client.global.set("access_token", response.body.access_token)
+
+%}

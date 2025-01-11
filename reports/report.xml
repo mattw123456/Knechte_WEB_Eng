@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites tests="97" name="IntelliJ IDEA HTTP Client">
+  <testsuite tests="16" name="000_Authenticate" failures="0" errors="0" skip="0">
+    <testcase classname="http.loginForm" name="Pre-request Handler" time="0.115" />
+    <testcase classname="http.loginForm" name="Response" time="0.867" />
+    <testcase classname="http.loginForm" name="Response Handler" time="0.332" />
+    <testcase classname="http.authentication" name="Response" time="0.062" />
+    <testcase classname="http.authentication" name="Response Handler" time="0.083" />
+    <testcase classname="http.getToken" name="Pre-request Handler" time="0.058" />
+    <testcase classname="http.getToken" name="Response" time="0.047" />
+    <testcase classname="http.getToken" name="Response Handler" time="0.081" />
+    <testcase classname="http.loginForm" name="Pre-request Handler" time="0.029" />
+    <testcase classname="http.loginForm" name="Response" time="0.04" />
+    <testcase classname="http.loginForm" name="Response Handler" time="0.037" />
+    <testcase classname="http.authentication" name="Response" time="0.04" />
+    <testcase classname="http.authentication" name="Response Handler" time="0.035" />
+    <testcase classname="http.getToken" name="Pre-request Handler" time="0.037" />
+    <testcase classname="http.getToken" name="Response" time="0.06" />
+    <testcase classname="http.getToken" name="Response Handler" time="0.033" />
+  </testsuite>
+  <testsuite tests="2" name="100_JwtPong" failures="0" errors="0" skip="0">
+    <testcase classname="http.jwt-pong" name="Response" time="0.034" />
+    <testcase classname="http.jwt-pong" name="Response Handler" time="0.0" />
+  </testsuite>
+  <testsuite tests="45" name="200_ReadAssets-v3" failures="1" errors="0" skip="0">
+    <testcase classname="http.get_the_status_with_authors" name="Response" time="0.017" />
+    <testcase classname="http.get_the_status_with_authors" name="Response status 200" time="0.007" />
+    <testcase classname="http.get_the_status_with_authors" name="Response body is valid" time="0.013" />
+    <testcase classname="http.get_the_status_with_authors" name="Response Handler" time="0.731" />
+    <testcase classname="http.get_all_buildings" name="Response" time="0.027" />
+    <testcase classname="http.get_all_buildings" name="Response status 200" time="0.001" />
+    <testcase classname="http.get_all_buildings" name="Response body is valid" time="0.059" />
+    <testcase classname="http.get_all_buildings" name="Response Handler" time="0.372" />
+    <testcase classname="http.get_a_single_building" name="Response" time="0.02" />
+    <testcase classname="http.get_a_single_building" name="Response status 200" time="0.001" />
+    <testcase classname="http.get_a_single_building" name="Response body is valid" time="0.009" />
+    <testcase classname="http.get_a_single_building" name="Response Handler" time="0.252" />
+    <testcase classname="http.get_a_non-existing_building" name="Response" time="0.019" />
+    <testcase classname="http.get_a_non-existing_building" name="Response status 404" time="0.019">
+      <failure type="Error" message="Response status is not 404 but 503&#10;  this.assert (at js-graalvm-response-handler.js:32)&#10;  :anonymous (at /workdir/tests/200_ReadAssets-v3.http:64)" />
+    </testcase>
+    <testcase classname="http.get_a_non-existing_building" name="Response Handler" time="0.25" />
+    <testcase classname="http.get_a_building_with_invalid_id" name="Response" time="0.016" />
+    <testcase classname="http.get_a_building_with_invalid_id" name="Response status 4xx" time="0.002" />
+    <testcase classname="http.get_a_building_with_invalid_id" name="Response Handler" time="0.048" />
+    <testcase classname="http.get_all_buildings_with_deleted" name="Response" time="0.024" />
+    <testcase classname="http.get_all_buildings_with_deleted" name="Response status 200" time="0.002" />
+    <testcase classname="http.get_all_buildings_with_deleted" name="Amount of buildings with deleted is higher than active only" time="0.002" />
+    <testcase classname="http.get_all_buildings_with_deleted" name="Response Handler" time="0.059" />
+    <testcase classname="http.get_all_storeys" name="Response" time="0.018" />
+    <testcase classname="http.get_all_storeys" name="Response status 200" time="0.001" />
+    <testcase classname="http.get_all_storeys" name="Response body is valid" time="0.048" />
+    <testcase classname="http.get_all_storeys" name="Response Handler" time="0.255" />
+    <testcase classname="http.get_storeys_with_building-filter" name="Response" time="0.023" />
+    <testcase classname="http.get_storeys_with_building-filter" name="Response status 200" time="0.003" />
+    <testcase classname="http.get_storeys_with_building-filter" name="Amount of unfiltered storeys is higher than filtered storeys" time="0.001" />
+    <testcase classname="http.get_storeys_with_building-filter" name="Response Handler" time="0.048" />
+    <testcase classname="http.get_a_single_storey" name="Response" time="0.01" />
+    <testcase classname="http.get_a_single_storey" name="Response status 200" time="0.002" />
+    <testcase classname="http.get_a_single_storey" name="Response body is valid" time="0.008" />
+    <testcase classname="http.get_a_single_storey" name="Response Handler" time="0.185" />
+    <testcase classname="http.get_all_rooms" name="Response" time="0.017" />
+    <testcase classname="http.get_all_rooms" name="Response status 200" time="0.001" />
+    <testcase classname="http.get_all_rooms" name="Response body is valid" time="0.042" />
+    <testcase classname="http.get_all_rooms" name="Response Handler" time="0.231" />
+    <testcase classname="http.get_rooms_with_storey-filter" name="Response" time="0.012" />
+    <testcase classname="http.get_rooms_with_storey-filter" name="Response status 200" time="0.001" />
+    <testcase classname="http.get_rooms_with_storey-filter" name="Response Handler" time="0.044" />
+    <testcase classname="http.get_a_single_room" name="Response" time="0.01" />
+    <testcase classname="http.get_a_single_room" name="Response status 200" time="0.001" />
+    <testcase classname="http.get_a_single_room" name="Response body is valid" time="0.007" />
+    <testcase classname="http.get_a_single_room" name="Response Handler" time="0.128" />
+  </testsuite>
+  <testsuite tests="34" name="300_WriteAssets-v3" failures="22" errors="0" skip="0">
+    <testcase classname="http.try_to_create_a_new_building_unauthenticated" name="Response" time="0.009" />
+    <testcase classname="http.try_to_create_a_new_building_unauthenticated" name="Response status 401" time="0.003">
+      <failure type="Error" message="Response status is not 401 but 405&#10;  this.assert (at js-graalvm-response-handler.js:32)&#10;  :anonymous (at /workdir/tests/300_WriteAssets-v3.http:22)" />
+    </testcase>
+    <testcase classname="http.try_to_create_a_new_building_unauthenticated" name="Response body is valid" time="0.004">
+      <failure type="Error" message="Response body is invalid: [{&quot;instancePath&quot;:&quot;&quot;,&quot;schemaPath&quot;:&quot;#/type&quot;,&quot;keyword&quot;:&quot;type&quot;,&quot;params&quot;:{&quot;type&quot;:&quot;object&quot;},&quot;message&quot;:&quot;must be object&quot;}]&#10;  this.assert (at js-graalvm-response-handler.js:32)&#10;  :anonymous (at /workdir/tests/300_WriteAssets-v3.http:26)" />
+    </testcase>
+    <testcase classname="http.try_to_create_a_new_building_unauthenticated" name="Response Handler" time="0.17" />
+    <testcase classname="http.try_to_create_a_new_building_with_an_invalid_key" name="Response" time="0.01" />
+    <testcase classname="http.try_to_create_a_new_building_with_an_invalid_key" name="Response status 4xx" time="0.002" />
+    <testcase classname="http.try_to_create_a_new_building_with_an_invalid_key" name="Response Handler" time="0.054" />
+    <testcase classname="http.create_a_new_building" name="Response" time="0.01" />
+    <testcase classname="http.create_a_new_building" name="Response Handler" time="0.149">
+      <failure type="Error" message="TypeError: Cannot read property 'id' of null&#10;  :module:eval (at /workdir/tests/300_WriteAssets-v3.http:125)" />
+    </testcase>
+    <testcase classname="http.get_new_building" name="Response" time="0.003">
+      <failure type="Error" message="java.net.URISyntaxException: Illegal character in path at index 46: http://localhost:9090/api/v3/assets/buildings/{{building-id}}" />
+    </testcase>
+    <testcase classname="http.update_new_building" name="Response" time="0.003">
+      <failure type="Error" message="java.net.URISyntaxException: Illegal character in path at index 46: http://localhost:9090/api/v3/assets/buildings/{{building-id}}" />
+    </testcase>
+    <testcase classname="http.check_building_change" name="Response" time="0.002">
+      <failure type="Error" message="java.net.URISyntaxException: Illegal character in path at index 46: http://localhost:9090/api/v3/assets/buildings/{{building-id}}" />
+    </testcase>
+    <testcase classname="http.soft_delete_new_building" name="Response" time="0.003">
+      <failure type="Error" message="java.net.URISyntaxException: Illegal character in path at index 46: http://localhost:9090/api/v3/assets/buildings/{{building-id}}" />
+    </testcase>
+    <testcase classname="http.check_for_deleted_at_on_building" name="Response" time="0.002">
+      <failure type="Error" message="java.net.URISyntaxException: Illegal character in path at index 46: http://localhost:9090/api/v3/assets/buildings/{{building-id}}" />
+    </testcase>
+    <testcase classname="http.try_to_create_a_storey_for_soft-deleted_building" name="Response" time="0.01" />
+    <testcase classname="http.try_to_create_a_storey_for_soft-deleted_building" name="Response status 400" time="0.002">
+      <failure type="Error" message="Response status is not 400 but 405&#10;  this.assert (at js-graalvm-response-handler.js:32)&#10;  :anonymous (at /workdir/tests/300_WriteAssets-v3.http:225)" />
+    </testcase>
+    <testcase classname="http.try_to_create_a_storey_for_soft-deleted_building" name="Response body is valid" time="0.003">
+      <failure type="Error" message="Response body is invalid: [{&quot;instancePath&quot;:&quot;&quot;,&quot;schemaPath&quot;:&quot;#/type&quot;,&quot;keyword&quot;:&quot;type&quot;,&quot;params&quot;:{&quot;type&quot;:&quot;object&quot;},&quot;message&quot;:&quot;must be object&quot;}]&#10;  this.assert (at js-graalvm-response-handler.js:32)&#10;  :anonymous (at /workdir/tests/300_WriteAssets-v3.http:229)" />
+    </testcase>
+    <testcase classname="http.try_to_create_a_storey_for_soft-deleted_building" name="Response Handler" time="0.13" />
+    <testcase classname="http.try_to_create_a_storey_for_non_existing_building" name="Response" time="0.01" />
+    <testcase classname="http.try_to_create_a_storey_for_non_existing_building" name="Response status 400" time="0.003">
+      <failure type="Error" message="Response status is not 400 but 405&#10;  this.assert (at js-graalvm-response-handler.js:32)&#10;  :anonymous (at /workdir/tests/300_WriteAssets-v3.http:248)" />
+    </testcase>
+    <testcase classname="http.try_to_create_a_storey_for_non_existing_building" name="Response body is valid" time="0.003">
+      <failure type="Error" message="Response body is invalid: [{&quot;instancePath&quot;:&quot;&quot;,&quot;schemaPath&quot;:&quot;#/type&quot;,&quot;keyword&quot;:&quot;type&quot;,&quot;params&quot;:{&quot;type&quot;:&quot;object&quot;},&quot;message&quot;:&quot;must be object&quot;}]&#10;  this.assert (at js-graalvm-response-handler.js:32)&#10;  :anonymous (at /workdir/tests/300_WriteAssets-v3.http:252)" />
+    </testcase>
+    <testcase classname="http.try_to_create_a_storey_for_non_existing_building" name="Response Handler" time="0.134" />
+    <testcase classname="http.restore_the_building" name="Response" time="0.001">
+      <failure type="Error" message="java.net.URISyntaxException: Illegal character in path at index 46: http://localhost:9090/api/v3/assets/buildings/{{building-id}}" />
+    </testcase>
+    <testcase classname="http.create_a_storey_for_building" name="Response" time="0.008" />
+    <testcase classname="http.create_a_storey_for_building" name="Response Handler" time="0.103">
+      <failure type="Error" message="TypeError: Cannot read property 'id' of null&#10;  :module:eval (at /workdir/tests/300_WriteAssets-v3.http:300)" />
+    </testcase>
+    <testcase classname="http.try_to_delete_building_with_active_storey" name="Response" time="0.002">
+      <failure type="Error" message="java.net.URISyntaxException: Illegal character in path at index 46: http://localhost:9090/api/v3/assets/buildings/{{building-id}}" />
+    </testcase>
+    <testcase classname="http.soft_delete_a_storey" name="Response" time="0.002">
+      <failure type="Error" message="java.net.URISyntaxException: Illegal character in path at index 44: http://localhost:9090/api/v3/assets/storeys/{{storey-id}}" />
+    </testcase>
+    <testcase classname="http.try_to_permanent_delete_building_with_soft-deleted_storey" name="Response" time="0.001">
+      <failure type="Error" message="java.net.URISyntaxException: Illegal character in path at index 46: http://localhost:9090/api/v3/assets/buildings/{{building-id}}?permanent=true" />
+    </testcase>
+    <testcase classname="http.permanent_delete_storey" name="Response" time="0.003">
+      <failure type="Error" message="java.net.URISyntaxException: Illegal character in path at index 44: http://localhost:9090/api/v3/assets/storeys/{{storey-id}}?permanent=true" />
+    </testcase>
+    <testcase classname="http.check_for_deleted_storey" name="Response" time="0.001">
+      <failure type="Error" message="java.net.URISyntaxException: Illegal character in path at index 44: http://localhost:9090/api/v3/assets/storeys/{{storey-id}}" />
+    </testcase>
+    <testcase classname="http.permanent_delete_building_for_cleanup_1" name="Response" time="0.003">
+      <failure type="Error" message="java.net.URISyntaxException: Illegal character in path at index 46: http://localhost:9090/api/v3/assets/buildings/{{building-id}}?permanent=true" />
+    </testcase>
+    <testcase classname="http.create_a_building_with_PUT" name="Response" time="0.009" />
+    <testcase classname="http.create_a_building_with_PUT" name="Response Handler" time="0.123">
+      <failure type="Error" message="TypeError: Cannot read property 'id' of null&#10;  :module:eval (at /workdir/tests/300_WriteAssets-v3.http:433)" />
+    </testcase>
+    <testcase classname="http.permanent_delete_building_for_cleanup_2" name="Response" time="0.002">
+      <failure type="Error" message="java.net.URISyntaxException: Illegal character in path at index 46: http://localhost:9090/api/v3/assets/buildings/{{building-id}}?permanent=true" />
+    </testcase>
+  </testsuite>
+</testsuites>
+
