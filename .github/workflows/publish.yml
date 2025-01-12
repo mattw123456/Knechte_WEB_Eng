@@ -1,0 +1,34 @@
+name: publish api to GHCR
+
+on: workflow_dispatch
+
+jobs:
+  build_and_test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up .NET SDK
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '8.0' # Passe die .NET-Version an
+
+      - name: Build project
+        run: dotnet build ./WebEngineering.sln --configuration Release
+
+      - name: Build and push the api image
+        run: docker login --username mattw123456 --password ${{ secrets.GH_PAT }} ghcr.io
+
+      - name: Run tests
+        run: dotnet test ./WebEngineering.sln --configuration Release
+
+  build_and_publish_api_for_amd:
+    runs-on: ubuntu-latest
+    needs: build_and_test
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build and push the api image for amd
+        run: |
+          docker login --username mattw123456 --password ${{ secrets.GH_PAT }} ghcr.io
+          docker build . --tag ghcr.io/mattw123456/biletado-api:latest --platform=linux/amd64
+          docker push ghcr.io/mattw123456/biletado-api:latest
