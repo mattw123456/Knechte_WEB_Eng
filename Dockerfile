@@ -7,12 +7,13 @@ FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:8.0-alpine AS build
 WORKDIR /source
 
 # Copy project file
-COPY WebEngineering.csproj .
+COPY ["WebEngineering/WebEngineering.csproj", "WebEngineering/"]
+COPY ["WebEngineering.Tests/WebEngineering.Tests.csproj", "WebEngineering.Tests/"]
 
 # Restore dependencies
 ARG TARGETARCH
 RUN --mount=type=cache,id=nuget,target=/root/.nuget/packages \
-    dotnet restore "./WebEngineering.csproj" --arch ${TARGETARCH/amd64/x64}
+    dotnet restore "WebEngineering/WebEngineering.csproj" --arch ${TARGETARCH/amd64/x64}
 
 # Copy the entire source
 COPY . .

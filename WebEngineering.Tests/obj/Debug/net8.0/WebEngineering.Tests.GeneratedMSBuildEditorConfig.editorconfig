@@ -8,6 +8,6 @@ build_property.PlatformNeutralAssembly =
 build_property.EnforceExtendedAnalyzerRules = 
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = WebEngineering.Tests
-build_property.ProjectDir = C:\Users\Marin\source\repos\WebEngineering.Tests\
+build_property.ProjectDir = C:\Users\Marin\source\repos\WebEng\WebEngineering.Tests\
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 

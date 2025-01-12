@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "+YHgoMYqVnY=",
+  "dgSpecHash": "a8jRwBGEwo8=",
   "success": true,
-  "projectFilePath": "C:\\Users\\Marin\\source\\repos\\WebEngineering.Tests\\WebEngineering.Tests.csproj",
+  "projectFilePath": "C:\\Users\\Marin\\source\\repos\\WebEng\\WebEngineering.Tests\\WebEngineering.Tests.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Marin\\.nuget\\packages\\castle.core\\5.1.1\\castle.core.5.1.1.nupkg.sha512",
     "C:\\Users\\Marin\\.nuget\\packages\\coverlet.collector\\6.0.0\\coverlet.collector.6.0.0.nupkg.sha512",
