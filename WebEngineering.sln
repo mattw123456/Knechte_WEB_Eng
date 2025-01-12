@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.10.35201.131
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebEngineering", "WebEngineering.csproj", "{A60D530D-1E46-4758-A0B8-E5C714586227}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebEngineering", "WebEngineering.csproj", "{A60D530D-1E46-4758-A0B8-E5C714586227}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebEngineering.Tests", "..\WebEngineering.Tests\WebEngineering.Tests.csproj", "{CC1E7A40-24BA-4133-908C-29384E63EE8F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{A60D530D-1E46-4758-A0B8-E5C714586227}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A60D530D-1E46-4758-A0B8-E5C714586227}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A60D530D-1E46-4758-A0B8-E5C714586227}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CC1E7A40-24BA-4133-908C-29384E63EE8F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CC1E7A40-24BA-4133-908C-29384E63EE8F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CC1E7A40-24BA-4133-908C-29384E63EE8F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CC1E7A40-24BA-4133-908C-29384E63EE8F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
