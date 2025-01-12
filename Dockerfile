@@ -6,25 +6,23 @@ FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:8.0-alpine AS build
 # Set up working directory
 WORKDIR /source
 
-# Copy project files
-COPY ["WebEngineering.csproj", "WebEngineering/"]
+# Copy project file
+COPY WebEngineering.csproj .
 
-
-# Restore dependencies based on architecture to cache packages per platform
+# Restore dependencies
 ARG TARGETARCH
 RUN --mount=type=cache,id=nuget,target=/root/.nuget/packages \
-    dotnet restore "WebEngineering.csproj" --arch ${TARGETARCH/amd64/x64}
+    dotnet restore "./WebEngineering.csproj" --arch ${TARGETARCH/amd64/x64}
 
 # Copy the entire source
 COPY . .
 
 # Set the working directory to the project folder
-WORKDIR /source/WebEngineering
+WORKDIR /source
 
 # Build and publish the application
 ARG BUILD_CONFIGURATION=Release
 RUN dotnet publish -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false --arch ${TARGETARCH/amd64/x64}
-
 ################################################################################
 # Stage 2: Create the runtime image
 FROM mcr.microsoft.com/dotnet/aspnet:8.0-alpine AS final
