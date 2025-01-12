@@ -1,5 +1,3 @@
-# syntax=docker/dockerfile:1
-
 # Stage 1: Build the application
 FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:8.0-alpine AS build
 
@@ -19,11 +17,11 @@ RUN --mount=type=cache,id=nuget,target=/root/.nuget/packages \
 COPY . .
 
 # Set the working directory to the project folder
-WORKDIR /source
+WORKDIR /source/WebEngineering # Change this to the correct project directory
 
 # Build and publish the application
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false --arch ${TARGETARCH/amd64/x64}
+RUN dotnet publish "WebEngineering.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false --arch ${TARGETARCH/amd64/x64}
 ################################################################################
 # Stage 2: Create the runtime image
 FROM mcr.microsoft.com/dotnet/aspnet:8.0-alpine AS final
